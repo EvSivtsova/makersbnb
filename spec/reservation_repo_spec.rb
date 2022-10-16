@@ -76,6 +76,13 @@ RSpec.describe ReservationRepository do
       expect(reservations[0].number_night).to eq 9
       expect(reservations[0].confirmed).to eq "t"
     end
+
+    it "returns nil if the Host doesn't exist" do
+      reservation_repo = ReservationRepository.new
+      reservation = reservation_repo.find_by_host('bbeb236a-46ba-49e9-b706-b59d0933f3b3')
+      expect(reservation).to eq nil
+    end
+
     it "finds a reservation by Guest_id" do
       reservation_repo = ReservationRepository.new
       user_repo = UserRepository.new
@@ -88,13 +95,47 @@ RSpec.describe ReservationRepository do
       expect(reservations[0].number_night).to eq 43
       expect(reservations[0].confirmed).to eq "t"
     end
+
+    it "returns nil if the guest doesn't exist" do
+      reservation_repo = ReservationRepository.new
+      reservation = reservation_repo.find_by_guest('bbef236a-46ba-49e9-b706-b59d0933f3b3')
+      expect(reservation).to eq nil
+    end
   end
-  xit "deletes a reservation by id" do
-    repo = ReservationRepository.new
-    repo.find_by_guest("Anna", "ajones@example.com")
-    repo.delete(1)
-    reservations = repo.all
-    expect(reservations.length).to eq X
-    expect(reservations.first.id).to eq(2)
+
+  it "deletes a reservation by id" do
+    repo  = ReservationRepository.new
+    expect(repo.all.length).to eq 4
+    id = repo.all[-1].reservation_id
+    repo.delete(id)
+    reservation = repo.all
+    expect(reservation.length).to eq 3
+  end
+
+  context "when searching by registraton id" do
+    it "returns the reservaton object" do
+      repo  = ReservationRepository.new
+      id = repo.all[0].reservation_id
+      reservation = repo.find_by_id(id)
+      expect(reservation.start_date).to eq "2022-07-22"
+      expect(reservation.end_date).to eq "2022-07-31"
+      expect(reservation.number_night).to eq 9
+    end
+
+    it "returns nil if the reservation doesn't exist" do
+      repo  = ReservationRepository.new
+      reservation = repo.find_by_id('bbeb236a-46ba-49e9-b706-b59d0933f3b3')
+      expect(reservation).to eq nil
+    end
+  end
+
+  context "when confirming registraton" do
+    it "changes the confirmed value to true" do
+      repo  = ReservationRepository.new
+      id = repo.all[0].reservation_id
+      repo.confirm_reservation(id)
+      reservation = repo.find_by_id(id)
+      expect(reservation.confirmed).to eq "t"
+    end
   end
 end
