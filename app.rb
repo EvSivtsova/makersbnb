@@ -95,14 +95,14 @@ class Application < Sinatra::Base
   end
   
   get "/requests" do
-    unless session[:user_id].nil?
-      @reservation_repo = ReservationRepository.new
-      @space_repo = SpaceRepository.new
-      @user_repo = UserRepository.new
-      @id = session[:user_id]
-      return erb(:requests)
+    if session[:user_id].nil?
+      redirect "/login"
     end
-    redirect "/login"
+    @reservation_repo = ReservationRepository.new
+    @space_repo = SpaceRepository.new
+    @user_repo = UserRepository.new
+    @id = session[:user_id]
+    return erb(:requests)
   end
 
   get "/newspace" do
@@ -141,7 +141,7 @@ class Application < Sinatra::Base
   
   get "/:space_id" do
     space_id = params[:space_id]
-    @space = SpaceRepository.new.find_by_space_id(space_id)[0]
+    @space = SpaceRepository.new.find_by_space_id(space_id)
     @host_name = UserRepository.new.find_by_id(@space.host_id).first_name
     
     erb :individual_space
