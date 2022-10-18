@@ -80,7 +80,7 @@ describe Application do
       end
     end
     context "user logged in" do
-      it "shows a list of properties, log out button and calendars" do
+      it "shows a list of properties to be rented, log out button and calendars" do
         post("/login", params = { email: "test2@example.com", password: "password2" })
         response = get("/")
         expect(response.status).to eq 200
@@ -91,6 +91,8 @@ describe Application do
         expect(response.body).to include '<h2 class="home_header">Welcome John Parker!</h2>'
         expect(response.body).to include '<input type="submit" value="Log out"'
         expect(response.body).to include '<form action="/newspace"'
+        expect(response.body).to include 'a modern house in the mountains'
+        expect(response.body).not_to include 'a modern house on the beach`'
       end
     end
   end
@@ -129,7 +131,7 @@ describe Application do
 
 context "GET /request/?" do
   context "request to book failed" do
-    it "shows a fail page" do
+    xit "shows a fail page" do
       response = get("/request/fail")
       expect(response.status).to eq 200
       expect(response.body).to include("<p>Please go back and try again - make sure you have entered dates!</p>")
