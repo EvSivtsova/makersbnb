@@ -44,6 +44,16 @@ describe Application do
         have_attributes(first_name: "Paris", last_name: "Monson", email: "parismonson@yahoo.com")
       )
     end
+    it "redirects to signup view if datavalidation is unsuccessful" do
+      response = post("/signup", params = { 
+        first_name: "P12aris", 
+        last_name: "Mon 1s on", 
+        email: "parismonsonyahoo.com", 
+        password: "hash_password" 
+      })
+      expect(response.status).to eq(200)
+      expect(last_request.url).to include("signup")
+    end
   end
 
   context "GET /login" do
