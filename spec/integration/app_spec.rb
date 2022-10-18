@@ -73,6 +73,15 @@ describe Application do
       response = post("/login", params = { email: "test2@example.com", password: "password2" })
       expect(response).to be_redirect
     end
+
+    it "shows a wrong email or password message" do
+      response = post("/login", params = { email: "test2@example.com", password: "spassword2" })
+      expect(response.status).to eq 200
+      expect(last_request.url).to include("login")
+      expect(response.body).to include("The password or email you entered is incorrect!")
+      expect(response.body).to include("/login")
+      expect(response.body).to include("/signup")
+    end
   end
 
   context "GET /" do
@@ -148,18 +157,6 @@ describe Application do
       expect(response.body).to include("<html>")
       expect(response.body).to include("<a href='/login'>")
       expect(response.body).to include("<a href='/'>")
-    end
-  end
-
-  context "GET /login/fail" do
-    it "shows a wrong email or password message" do
-      response = get("/login/fail")
-      expect(response.status).to eq 200
-      expect(response.body).to include("<h1>The password or email you entered is incorrect!</h1>")
-      expect(response.body).to include("<html>")
-      expect(response.body).to include("<body>")
-      expect(response.body).to include("<a href='/login'>")
-      expect(response.body).to include("a href='/signup'>")
     end
   end
 

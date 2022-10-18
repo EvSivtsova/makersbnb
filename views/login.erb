@@ -6,7 +6,9 @@
     <main>
       <h1>MakersBNB</h1>
       <h2>Login</h2>
-    </form>
+    <%if @error == true%>
+      <p>The password or email you entered is incorrect!</p>
+    <%end%>
     <form action="/login" method="POST">
       <label>Email:</label>
       <input type="email" name="email"/><br>

@@ -58,11 +58,8 @@ class Application < Sinatra::Base
       session[:user_id] = @user.user_id
       redirect "/"
     end
-    redirect "/login/fail"
-  end
-
-  get "/login/fail" do
-    return erb(:login_fail)
+    @error = true
+    erb(:login)
   end
 
   get "/logout" do
