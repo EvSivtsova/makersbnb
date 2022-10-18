@@ -51,7 +51,6 @@ describe Application do
         email: "parismonsonyahoo.com", 
         password: "hash_password" 
       })
-      expect(response.status).to eq(200)
       expect(last_request.url).to include("signup")
     end
   end

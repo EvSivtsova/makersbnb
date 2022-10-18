@@ -19,7 +19,6 @@ class Application < Sinatra::Base
     @spaces = SpaceRepository.new.all
     @user_repo = UserRepository.new
     @logged_in_user = UserRepository.new.find_by_id(session[:user_id]) if session[:user_id]
-
     erb :index
   end
 
@@ -28,25 +27,22 @@ class Application < Sinatra::Base
   end
 
   post "/signup" do
-    @error = nil
     signup_input_validation
     if @error != nil
-      @error
-      return erb(:signup)
-    else
-      repo_users = UserRepository.new
-      new_user = User.new
-      new_user.first_name = params[:first_name]
-      new_user.last_name = params[:last_name]
-      new_user.email = params[:email]
-      new_user.password = params[:password]
-      repo_users.create_user(new_user)
-      @user = repo_users.find_user(params[:email])
-      session[:user_id] = @user.user_id
-      redirect "/signup/success"
+      erb(signup)
     end
+    repo_users = UserRepository.new
+    new_user = User.new
+    new_user.first_name = params[:first_name]
+    new_user.last_name = params[:last_name]
+    new_user.email = params[:email]
+    new_user.password = params[:password]
+    repo_users.create_user(new_user)
+    @user = repo_users.find_user(params[:email])
+    session[:user_id] = @user.user_id
+    redirect "/signup/success"
   end
-  
+
   get "/signup/success" do
     return erb(:signup_success)
   end
