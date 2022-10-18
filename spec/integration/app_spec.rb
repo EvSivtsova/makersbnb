@@ -1,6 +1,7 @@
 require "spec_helper"
 require "rack/test"
 require_relative "../../app"
+require 'test/unit'
 
 def reset_makers_bnb_table
   seed_sql = File.read("spec/seeds/makers_bnb_seed.sql")
@@ -106,7 +107,30 @@ describe Application do
       expect(response.body).to include '<a href="/" class="home">Go back to homepage</a>'
       expect(response.body).to include "<p>The host of this space is: John"
     end
+
+    it "shows the booking dates when user visit somebody else property" do
+      space_repo = SpaceRepository.new
+      space_id = space_repo.all[1].space_id
+      user_repo = UserRepository.new
+      id = user_repo.all.first.user_id
+      session = {user_id: id}
+      response = get "#{space_id}", {}, "rack.session" => session
+      expect(response.status).to eq 200
+      expect(space_repo).to be_instance_of(SpaceRepository)
+      expect(user_repo).to  be_instance_of(UserRepository)
+      expect(response.body).to include "<h1>MakersBNB</h1>"
+      expect(response.body).to include '<a href="/" class="home">Go back to homepage</a>'
+      expect(response.body).to include "<p>The host of this space is: Anna"
+      expect(response.body).to include "<label>From:</label>"
+      expect(response.body).to include 'input type="date"'
+      expect(response.body).to include 'name="available_from"/>'
+      expect(response.body).to include "<label>To:</label>"
+      expect(response.body).to include 'input type="date"'
+      expect(response.body).to include 'name="available_to"/>'
+      expect(response.body).to include "<button>Request to Book!</button>"
+    end
   end
+
   context "GET /signup/success" do
     it "shows a signup success message" do
       response = get("/signup/success")
@@ -117,6 +141,7 @@ describe Application do
       expect(response.body).to include("<a href='/'>")
     end
   end
+
   context "GET /login/fail" do
     it "shows a wrong email or password message" do
       response = get("/login/fail")
@@ -131,7 +156,7 @@ describe Application do
 
 context "GET /request/?" do
   context "request to book failed" do
-    xit "shows a fail page" do
+    it "shows a fail page" do
       response = get("/request/fail")
       expect(response.status).to eq 200
       expect(response.body).to include("<p>Please go back and try again - make sure you have entered dates!</p>")
@@ -166,7 +191,7 @@ context "GET /request/?" do
   end
   
   context "POST /requests/:reservation_id" do
-    xit "returns redirects to /requests after reservation status updated" do
+    it "returns redirects to /requests after reservation status updated" do
       res_id = 
 
       post("/requests/#{res_id}")

@@ -119,7 +119,6 @@ class Application < Sinatra::Base
     @error = nil
     input_validation
     if @error != nil
-      p @error
       return erb(:new_space)
     else
       repo_spaces = SpaceRepository.new
@@ -143,7 +142,6 @@ class Application < Sinatra::Base
     space_id = params[:space_id]
     @space = SpaceRepository.new.find_by_space_id(space_id)
     @host_name = UserRepository.new.find_by_id(@space.host_id).first_name
-    
     erb :individual_space
   end
   

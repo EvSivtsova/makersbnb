@@ -12,14 +12,14 @@ WITH john AS (
    SELECT user_id FROM users WHERE first_name = 'John')
  
  INSERT INTO spaces (title, description, address, price_per_night, available_from, available_to, host_id)
-   SELECT 'beach view', 'a modern house on the beach', 'Camber S1 00J', 100, '2022/07/19', '2022/11/19', user_id
+   SELECT 'beach view', 'a modern house on the beach', 'Camber S1 00J', 100, '2022/07/19', '2023/11/19', user_id
    FROM john;
  
 WITH anna AS (
    SELECT user_id FROM users WHERE first_name = 'Anna')
   
  INSERT INTO spaces (title, description, address, price_per_night, available_from, available_to, host_id)
-   SELECT 'mountain view', 'a modern house in the mountains', 'Alpes 12345', 150, '2022/06/19', '2022/09/19', user_id
+   SELECT 'mountain view', 'a modern house in the mountains', 'Alpes 12345', 150, '2022/06/19', '2023/09/19', user_id
    FROM anna;
  
 WITH anna AS (
