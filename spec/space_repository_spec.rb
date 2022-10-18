@@ -20,7 +20,7 @@ describe SpaceRepository do
     expect(spaces.first.description).to eq "a modern house on the beach"
     expect(spaces.first.price_per_night).to eq "$100.00"
     expect(spaces.first.available_from).to eq "2022-07-19"
-    expect(spaces.first.available_to).to eq "2022-11-19"
+    expect(spaces.first.available_to).to eq "2023-11-19"
     expect(spaces.last.address).to eq "London SW1 0UJ"
     expect(spaces.last.title).to eq "city getaway"
     expect(spaces.last.description).to eq "a bright private room in Central London"
@@ -37,7 +37,7 @@ describe SpaceRepository do
     expect(space.price_per_night).to eq "$100.00"
     expect(space.description).to eq "a modern house on the beach"
     expect(space.available_from).to eq "2022-07-19"
-    expect(space.available_to).to eq "2022-11-19"
+    expect(space.available_to).to eq "2023-11-19"
   end
 
   it "adds a new space to the repo" do
