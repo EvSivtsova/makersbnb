@@ -181,6 +181,13 @@ describe Application do
         expect(user_repo).to be_instance_of(UserRepository)
         expect(space_repo).to be_instance_of(SpaceRepository)
         expect(last_response).to be_redirect
+        confirmation = get("/request/success")
+        expect(confirmation.status).to eq 200
+        expect(confirmation.body).to include("You have successfully sent a request to stay at")
+        expect(confirmation.body).to include("<html>")
+        expect(confirmation.body).to include("<body>")
+        expect(confirmation.body).to include('<a href="/"')
+        expect(confirmation.body).to include('<a href="/requests"')
       end
     end
     context 'property is not available for rent' do
