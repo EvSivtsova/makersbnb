@@ -24,6 +24,8 @@ We were asked to create a web app that connects property owners and potential re
 * [Karolina](https://github.com/karolina-codes)
 * [Paris](https://github.com/ParisMonson)<br>
 
+Following the completion of the group project, I added some additional tests to increase test coverage and add more edge cases, and refactored some of the code (wip). The original completed project can be found [here](https://github.com/ParisMonson/makersbnb).
+
 ## Code Design
 
 We followed MVC model when working on this chalenge. We designed **three schemas** with PostgreSQL:
@@ -49,8 +51,6 @@ The result is a simple app that allows the users to:
 * list spaces
 * send reservation requests with the use of calendar
 * approve reservation requests for own properties
-
-Following the completion of the group project, I added some additional tests to increase coverage and cover more edge cases, and refactored some of the code (wip). 
 
 ## TechBit
 
