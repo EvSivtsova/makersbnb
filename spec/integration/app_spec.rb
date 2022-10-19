@@ -127,15 +127,12 @@ describe Application do
     end
 
     it "shows the booking dates when user visit somebody else property" do
+      login = post('/login', params = { email: "test2@example.com", password: "password2" })
       space_repo = SpaceRepository.new
       space_id = space_repo.all[1].space_id
-      user_repo = UserRepository.new
-      id = user_repo.all.first.user_id
-      session = {user_id: id}
-      response = get "#{space_id}", {}, "rack.session" => session
+      response = get "#{space_id}"
       expect(response.status).to eq 200
       expect(space_repo).to be_instance_of(SpaceRepository)
-      expect(user_repo).to  be_instance_of(UserRepository)
       expect(response.body).to include "<h1>MakersBNB</h1>"
       expect(response.body).to include '<a href="/" class="home">Go back to homepage</a>'
       expect(response.body).to include "<p>The host of this space is: Anna"
@@ -197,7 +194,7 @@ context "GET /request/?" do
   end
   
   context "POST /requests/:reservation_id" do
-    it "returns redirects to /requests after reservation status updated" do
+    xit "returns redirects to /requests after reservation status updated" do
       res_id = 
 
       post("/requests/#{res_id}")
