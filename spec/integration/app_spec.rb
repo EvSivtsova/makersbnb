@@ -35,7 +35,11 @@ describe Application do
 
   context "POST /signup" do
     it "create a new user and redirects to /signup/success" do
-      response = post("/signup", params = { first_name: "Paris", last_name: "Monson", email: "parismonson@yahoo.com", password: "hash_password" })
+      response = post("/signup", params = { 
+        first_name: "Paris", 
+        last_name: "Monson", 
+        email: "parismonson@yahoo.com", 
+        password: "hash_password" })
 
       expect(last_response).to be_redirect
 
@@ -119,7 +123,7 @@ describe Application do
   context "GET /:space_id" do
     it "shows an individual space page" do
       space_id = SpaceRepository.new.all[0].space_id
-      response = get("#{space_id}")
+      response = get space_id.to_s
       expect(response.status).to eq 200
       expect(response.body).to include "<h1>MakersBNB</h1>"
       expect(response.body).to include '<a href="/" class="home">Go back to homepage</a>'
@@ -130,7 +134,7 @@ describe Application do
       login = post('/login', params = { email: "test2@example.com", password: "password2" })
       space_repo = SpaceRepository.new
       space_id = space_repo.all[1].space_id
-      response = get "#{space_id}"
+      response = get space_id.to_s
       expect(response.status).to eq 200
       expect(space_repo).to be_instance_of(SpaceRepository)
       expect(response.body).to include "<h1>MakersBNB</h1>"
@@ -162,10 +166,10 @@ describe Application do
       it "checks the dates and redirects to /request/success" do
         user_repo = UserRepository.new
         id = user_repo.all.first.user_id
-        session = {user_id: id}
+        session = { user_id: id }
         space_repo = SpaceRepository.new
         space = space_repo.all[1]
-        get("#{space.space_id}", {},  "rack.session" => session)
+        get(space.space_id.to_s, {}, "rack.session" => session)
         response = post('request/?', 
           params = {
             host_id: space.host_id,
@@ -194,10 +198,10 @@ describe Application do
       it "checks the dates and redirects to /request/failure" do
         user_repo = UserRepository.new
         id = user_repo.all.first.user_id
-        session = {user_id: id}
+        session = { user_id: id }
         space_repo = SpaceRepository.new
         space = space_repo.all[1]
-        get("#{space.space_id}", {},  "rack.session" => session)
+        get(space.space_id.to_s, {}, "rack.session" => session)
         response = post('request/?', 
           params = {
             host_id: space.host_id,
@@ -219,7 +223,7 @@ describe Application do
       it "redirects to login" do
         space_repo = SpaceRepository.new
         space = space_repo.all[1]
-        get("#{space.space_id}", {})
+        get(space.space_id.to_s)
         response = post('request/?', 
           params = {
             host_id: space.host_id,
@@ -237,22 +241,14 @@ describe Application do
 
   context "GET /requests" do
     it "returns 200 OK when logged in" do
-      post("/login", params={email: "ajones@example.com", password: "password3"})
+      post("/login", params = { email: "ajones@example.com", password: "password3" })
       response = get("/requests")
       expect(response.status).to eq 200
       expect(response.body).to include("<html>")
       expect(response.body).to include("Requests")
     end
   end
-  
-  # context "POST /requests/:reservation_id" do
-  #   xit "returns redirects to /requests after reservation status updated" do
-  #     res_id = 
-
-  #     post("/requests/#{res_id}")
-  #       end 
-  #  end 
-        
+      
   context "GET /newspace" do
     it "returns 200 OK and form for create a new space" do
       login = post('/login', params = { email: "test2@example.com", password: "password2" })
@@ -270,7 +266,7 @@ describe Application do
 
     it "redirects to /login page if user not logged in" do
       response = get("/newspace")
-      # expect(response.status).to eq 302
+      expect(response.status).to eq 302
       expect(response).to be_redirect  
     end
   end
@@ -309,21 +305,21 @@ describe Application do
       login = post('/login', params = { email: "test2@example.com", password: "password2" })
       repo = SpaceRepository.new
       new_space = double(:space, address: "address", description: "description", available_from: "2022/07/19", available_to: "2022/08/01", host_id: repo.all.first.host_id)
-      expect{repo.create(new_space)}
+      expect { repo.create(new_space) }
     end
 
     it "returns fails to create a new space if price per night is not digits and '.'" do
       login = post('/login', params = { email: "test2@example.com", password: "password2" })
       repo = SpaceRepository.new
       new_space = double(:space, price_per_night: 'hello!', address: "address", description: "description", available_from: "2022/07/19", available_to: "2022/08/01", host_id: repo.all.first.host_id)
-      expect{repo.create(new_space)}
+      expect { repo.create(new_space) }
     end
 
     it "returns fails to create a new space if title, description or address contain not symbols" do
       login = post('/login', params = { email: "test2@example.com", password: "password2" })
       repo = SpaceRepository.new
       new_space = double(:space, price_per_night: '@$!$<>!', address: "address", description: "description", available_from: "2022/07/19", available_to: "2022/08/01", host_id: repo.all.first.host_id)
-      expect{repo.create(new_space)}
+      expect { repo.create(new_space) }
     end
   end
 
