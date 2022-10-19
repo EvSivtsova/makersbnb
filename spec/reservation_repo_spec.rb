@@ -14,8 +14,9 @@ RSpec.describe ReservationRepository do
   end
 
   it "gets all reservations" do
-    repo =  ReservationRepository.new
+    repo = ReservationRepository.new
     reservations = repo.all
+    expect(repo).to be_instance_of(ReservationRepository)
     expect(reservations.length).to eq 4
     expect(reservations[0].start_date).to eq "2022-07-22"
     expect(reservations[0].end_date).to eq "2022-07-31"
@@ -47,6 +48,11 @@ RSpec.describe ReservationRepository do
     reservation_repo = ReservationRepository.new
     reservation_repo.create(reservation)
     reservations = reservation_repo.find_by_guest(guest_id)
+    
+    expect(user_repo).to be_instance_of(UserRepository)
+    expect(space_repo).to be_instance_of(SpaceRepository)
+    expect(reservation).to be_instance_of(Reservation)
+    expect(reservation_repo).to be_instance_of(ReservationRepository)
 
     expect(reservations.length).to eq 2
     expect(reservations[1].host_id).to eq host_id
@@ -104,7 +110,7 @@ RSpec.describe ReservationRepository do
   end
 
   it "deletes a reservation by id" do
-    repo  = ReservationRepository.new
+    repo = ReservationRepository.new
     expect(repo.all.length).to eq 4
     id = repo.all[-1].reservation_id
     repo.delete(id)
@@ -114,7 +120,7 @@ RSpec.describe ReservationRepository do
 
   context "when searching by registraton id" do
     it "returns the reservaton object" do
-      repo  = ReservationRepository.new
+      repo = ReservationRepository.new
       id = repo.all[0].reservation_id
       reservation = repo.find_by_id(id)
       expect(reservation.start_date).to eq "2022-07-22"
@@ -123,7 +129,7 @@ RSpec.describe ReservationRepository do
     end
 
     it "returns nil if the reservation doesn't exist" do
-      repo  = ReservationRepository.new
+      repo = ReservationRepository.new
       reservation = repo.find_by_id('bbeb236a-46ba-49e9-b706-b59d0933f3b3')
       expect(reservation).to eq nil
     end
@@ -131,7 +137,7 @@ RSpec.describe ReservationRepository do
 
   context "when confirming registraton" do
     it "changes the confirmed value to true" do
-      repo  = ReservationRepository.new
+      repo = ReservationRepository.new
       id = repo.all[0].reservation_id
       repo.confirm_reservation(id)
       reservation = repo.find_by_id(id)
