@@ -277,11 +277,8 @@ context "GET /request/?" do
 
   context "GET /logout" do
     it "logs out the user and deletes session's details" do
-      user_repo = UserRepository.new
-      id = user_repo.all.first.user_id
-      session = {user_id: id}
-      response = get "/logout", {}, "rack.session" => session
-      expect(user_repo).to be_instance_of(UserRepository)
+      login = post('/login', params = { email: "test2@example.com", password: "password2" })
+      response = get "/logout"
       expect(response.status).to eq 302
       expect(last_response).to be_redirect
     end
