@@ -27,11 +27,11 @@ We were asked to create a web app that connects property owners and potential re
 ## Code Design
 
 We followed MVC model when working on this chalenge. We designed **three schemas** with PostgreSQL:
-1. Users (can be both renters and hosts).
-2. Spaces that can be rented. This schema references the users table to identify hosts. 
-3. Reservations that stores the details of the reservations:
-   * the space rented out - references the spaces schema.
-   * the renter and host identities - references the users schema.
+1. Users schema (can be both renters and hosts).
+2. Spaces schema that can be rented. This schema references the users table to identify hosts. 
+3. Reservations schema that stores the details of the reservations:
+   * the space rented out (references the spaces schema(.
+   * the renter and host identities (references the users schema).
    * the start and the end date of the booking.
    
 These schemas gave us enough flexibility to develop features in line with our user stories while minimizing the duplication of the data.
@@ -44,7 +44,11 @@ While creating the database and the seeds, we've test-driven models that are res
 
 Afterwards we've test-driven the Application class, which functions as a controller, and the views, thus connecting the frontend and the backend. 
 
-The result is a simple app that allows the users to create accounts, and list and rent spaces with the use of a calendar.
+The result is a simple app that allows the users to:
+* create accounts 
+* list spaces
+* send reservation requests with the use of calendar
+* approve reservation requests for own properties
 
 Following the completion of the group project, I added some additional tests to increase coverage and cover more edge cases, and refactored some of the code (wip). 
 
@@ -89,4 +93,6 @@ createdb makers_bnb_test
 rspec
 rubocop
 ```
+<img src='https://github.com/EvSivtsova/makersbnb/blob/main/outputs/total_test_coverage.png'>
+
 Please view screenshots of some of the test results [here](https://github.com/EvSivtsova/makersbnb/tree/main/outputs).
