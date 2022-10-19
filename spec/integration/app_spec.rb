@@ -1,7 +1,7 @@
 require "spec_helper"
 require "rack/test"
 require_relative "../../app"
-require 'test/unit'
+# require "test/unit"
 
 def reset_makers_bnb_table
   seed_sql = File.read("spec/seeds/makers_bnb_seed.sql")
@@ -275,6 +275,18 @@ context "GET /request/?" do
       repo = SpaceRepository.new
       new_space = double(:space, price_per_night: '@$!$<>!', address: "address", description: "description", available_from: "2022/07/19", available_to: "2022/08/01", host_id: repo.all.first.host_id)
       expect{repo.create(new_space)}
+    end
+  end
+
+  context "GET /logout" do
+    it "logs out the user and deletes session's details" do
+      user_repo = UserRepository.new
+      id = user_repo.all.first.user_id
+      session = {user_id: id}
+      response = get "/logout", {}, "rack.session" => session
+      expect(user_repo).to be_instance_of(UserRepository)
+      expect(response.status).to eq 302
+      expect(last_response).to be_redirect
     end
   end
 end
