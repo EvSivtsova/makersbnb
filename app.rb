@@ -27,10 +27,10 @@ class Application < Sinatra::Base
   post "/signup" do
     signup_input_validation
     return erb(:signup) unless @error.nil?
-    repo_users = UserRepository.new
+    users_repo = UserRepository.new
     new_user = assign_params_user(params)
-    repo_users.create_user(new_user)
-    @user = repo_users.find_user(params[:email])
+    users_repo.create_user(new_user)
+    @user = users_repo.find_user(params[:email])
     session[:user_id] = @user.user_id
     redirect "/signup/success"
   end
@@ -44,9 +44,9 @@ class Application < Sinatra::Base
   end
 
   post "/login" do
-    repo_users = UserRepository.new
-    if repo_users.valid_login?(params[:email], params[:password])
-      @user = repo_users.find_user(params[:email])
+    users_repo = UserRepository.new
+    if users_repo.valid_login?(params[:email], params[:password])
+      @user = users_repo.find_user(params[:email])
       session[:user_id] = @user.user_id
       redirect "/"
     end
@@ -69,8 +69,8 @@ class Application < Sinatra::Base
       return erb :individual_space
     end
     reservation_repo = ReservationRepository.new
-    reservation = assign_params_to_reservation(params)
-    reservation_repo.create(reservation)
+    new_reservation = assign_params_to_reservation(params)
+    reservation_repo.create(new_reservation)
     redirect "/request/success"
   end
 
@@ -97,9 +97,9 @@ class Application < Sinatra::Base
     redirect "/login" if session[:user_id].nil?
     validate_input
     return erb(:new_space) unless @error.nil?
-    repo_spaces = SpaceRepository.new
+    spaces_repo = SpaceRepository.new
     new_space = assign_params_space(params)
-    repo_spaces.create(new_space)
+    spaces_repo.create(new_space)
     @space = SpaceRepository.new.find_by_host_id(session[:user_id])[-1]
     @host = UserRepository.new.find_by_id(session[:user_id])
     erb(:new_space_success)
@@ -138,12 +138,12 @@ class Application < Sinatra::Base
   end
 
   def signup_input_validation
-    repo_users = UserRepository.new
+    users_repo = UserRepository.new
     if ((params[:first_name].length == 0) || (params[:last_name].length == 0) || (params[:email].length == 0) || (params[:password].length == 0))
       @error = "input_missing"
     elsif (params[:first_name].match?(/[^a-z\s-]{2,30}/i)|| params[:last_name].match?(/[^a-z\s-]{2,30}/i))
       @error = "invalid_name"
-    elsif !repo_users.find_user(params[:email]).nil?
+    elsif !users_repo.find_user(params[:email]).nil?
       @error = "existing_email"
     end
     return @error
