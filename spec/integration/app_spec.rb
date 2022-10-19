@@ -208,6 +208,24 @@ describe Application do
         expect(response.body).to include("Please try again - make sure you have entered dates!")   
       end
     end
+    context 'when looking for property and being logged out' do
+      it "redirects to login" do
+        space_repo = SpaceRepository.new
+        space = space_repo.all[1]
+        get("#{space.space_id}", {})
+        response = post('request/?', 
+          params = {
+            host_id: space.host_id,
+            space_id: space.space_id,
+            available_from: "28/10/2024", 
+            available_to: "22/10/2024",
+            confirmed: "false"
+          })
+        expect(space_repo).to be_instance_of(SpaceRepository)
+        expect(response.status).to eq 302
+        expect(last_response).to be_redirect
+      end
+    end
   end
 
   context "GET /requests" do
@@ -220,13 +238,13 @@ describe Application do
     end
   end
   
-  context "POST /requests/:reservation_id" do
-    xit "returns redirects to /requests after reservation status updated" do
-      res_id = 
+  # context "POST /requests/:reservation_id" do
+  #   xit "returns redirects to /requests after reservation status updated" do
+  #     res_id = 
 
-      post("/requests/#{res_id}")
-        end 
-   end 
+  #     post("/requests/#{res_id}")
+  #       end 
+  #  end 
         
   context "GET /newspace" do
     it "returns 200 OK and form for create a new space" do
@@ -245,7 +263,7 @@ describe Application do
 
     it "redirects to /login page if user not logged in" do
       response = get("/newspace")
-      expect(response.status).to eq 302
+      # expect(response.status).to eq 302
       expect(response).to be_redirect  
     end
   end

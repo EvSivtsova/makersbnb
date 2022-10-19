@@ -68,23 +68,24 @@ class Application < Sinatra::Base
   end
 
   post "/request/?" do
-    available_from = params[:available_from]
-    available_to = params[:available_to]
-    date_regex = /^\d{4}\-(0?[1-9]|1[012])\-(0?[1-9]|[12][0-9]|3[01])$/
-
-    if date_regex.match?(available_from) && date_regex.match?(available_to)
-      redirect "/request/success"
+    if session[:user_id] == nil
+      redirect"/login"
     end
-
-    redirect "/request/fail"
+    if valid_availability?(params[:available_from], params[:available_to]) == false
+      @error = "Please try again - make sure you have entered dates!"
+      space_id = params[:space_id]
+      @space = SpaceRepository.new.find_by_space_id(space_id)
+      @host_name = UserRepository.new.find_by_id(@space.host_id).first_name
+      return erb :individual_space
+    end
+      reservation_repo = ReservationRepository.new
+      reservation = assign_values_to_reservation(params)
+      reservation_repo.create(reservation)
+      redirect "/request/success"
   end
 
   get "/request/success" do
     erb :request_success
-  end
-
-  get "/request/fail" do
-    erb :request_fail
   end
   
   get "/requests" do
@@ -130,7 +131,6 @@ class Application < Sinatra::Base
     end 
   end
 
-  
   get "/:space_id" do
     space_id = params[:space_id]
     @space = SpaceRepository.new.find_by_space_id(space_id)
