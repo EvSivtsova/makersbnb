@@ -21,7 +21,8 @@ class UserRepository
   end
 
   def delete_user(first_name, last_name, email)
-    sql = "DELETE FROM users WHERE users.first_name = $1 AND users.last_name = $2 AND users.email = $3;"
+    sql = "DELETE FROM users
+              WHERE users.first_name = $1 AND users.last_name = $2 AND users.email = $3;"
     params = [first_name, last_name, email]
     DatabaseConnection.exec_params(sql, params)
     return nil
@@ -31,11 +32,8 @@ class UserRepository
     sql = "SELECT * FROM users WHERE users.email = $1;"
     params = [email]
     result_set = DatabaseConnection.exec_params(sql, params)
-    if result_set.to_a.empty?
-      return nil
-    else
-      found_user = assign_user(result_set[0])
-    end
+    return nil if result_set.to_a.empty?
+    found_user = assign_user(result_set[0])
     return found_user
   end
 
@@ -43,14 +41,15 @@ class UserRepository
     sql = "SELECT * FROM users WHERE users.email = $1 AND users.password = crypt($2, password);"
     params = [email, password]
     result_set = DatabaseConnection.exec_params(sql, params)
-    result_set.to_a.empty? ? false : true
+    return false if result_set.to_a.empty?
+    return true
   end
 
   def find_by_id(user_id)
     sql = "SELECT * FROM users WHERE user_id = $1;"
     result_set = DatabaseConnection.exec_params(sql, [user_id])
-
-    result_set.each { |record| return assign_user(record) }
+    result = result_set[0]
+    assign_user(result)
   end
 
   private
