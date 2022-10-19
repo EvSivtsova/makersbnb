@@ -68,9 +68,7 @@ class Application < Sinatra::Base
   end
 
   post "/request/?" do
-    if session[:user_id] == nil
-      redirect"/login"
-    end
+    redirect"/login" if session[:user_id] == nil
     if valid_availability?(params[:available_from], params[:available_to]) == false
       @error = "Please try again - make sure you have entered dates!"
       space_id = params[:space_id]
@@ -85,13 +83,12 @@ class Application < Sinatra::Base
   end
 
   get "/request/success" do
+    redirect"/login" if session[:user_id] == nil
     erb :request_success
   end
   
   get "/requests" do
-    if session[:user_id].nil?
-      redirect "/login"
-    end
+    redirect"/login" if session[:user_id] == nil
     @reservation_repo = ReservationRepository.new
     @space_repo = SpaceRepository.new
     @user_repo = UserRepository.new
@@ -100,16 +97,12 @@ class Application < Sinatra::Base
   end
 
   get "/newspace" do
-    if session[:user_id] == nil
-      redirect"/login"
-    end
+    redirect"/login" if session[:user_id] == nil
     return erb(:new_space)
   end
 
   post "/newspace" do
-    if session[:user_id] == nil
-      redirect"/login"
-    end
+    redirect"/login" if session[:user_id] == nil
     @error = nil
     input_validation
     if @error != nil
@@ -139,6 +132,7 @@ class Application < Sinatra::Base
   end
   
   post "/requests/:reservation_id" do
+    redirect"/login" if session[:user_id] == nil
     repo = ReservationRepository.new
     repo.confirm_reservation(params[:reservation_id])
     redirect "/requests"
