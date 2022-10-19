@@ -2,7 +2,8 @@ require "pg"
 
 class DatabaseConnection
   def self.connect
-    database_name = if ENV["ENV"] == "test"
+    database_name = 
+      if ENV["ENV"] == "test"
         "makers_bnb_test"
       else
         "makers_bnb"
