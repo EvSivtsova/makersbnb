@@ -8,8 +8,6 @@ require_relative "lib/reservation_repository"
 DatabaseConnection.connect
 
 class Application < Sinatra::Base
-  # This allows the app code to refresh
-  # without having to restart the server.
   configure :development do
     register Sinatra::Reloader
     enable :sessions
@@ -28,15 +26,9 @@ class Application < Sinatra::Base
 
   post "/signup" do
     signup_input_validation
-    if @error != nil
-      erb(:signup)
-    end
+    return erb(:signup) unless @error.nil?
     repo_users = UserRepository.new
-    new_user = User.new
-    new_user.first_name = params[:first_name]
-    new_user.last_name = params[:last_name]
-    new_user.email = params[:email]
-    new_user.password = params[:password]
+    new_user = assign_params_user(params)
     repo_users.create_user(new_user)
     @user = repo_users.find_user(params[:email])
     session[:user_id] = @user.user_id
@@ -68,7 +60,7 @@ class Application < Sinatra::Base
   end
 
   post "/request/?" do
-    redirect"/login" if session[:user_id] == nil
+    redirect "/login" if session[:user_id].nil?
     if valid_availability?(params[:available_from], params[:available_to]) == false
       @error = "Please try again - make sure you have entered dates!"
       space_id = params[:space_id]
@@ -76,19 +68,19 @@ class Application < Sinatra::Base
       @host_name = UserRepository.new.find_by_id(@space.host_id).first_name
       return erb :individual_space
     end
-      reservation_repo = ReservationRepository.new
-      reservation = assign_values_to_reservation(params)
-      reservation_repo.create(reservation)
-      redirect "/request/success"
+    reservation_repo = ReservationRepository.new
+    reservation = assign_params_to_reservation(params)
+    reservation_repo.create(reservation)
+    redirect "/request/success"
   end
 
   get "/request/success" do
-    redirect"/login" if session[:user_id] == nil
+    redirect "/login" if session[:user_id].nil?
     erb :request_success
   end
   
   get "/requests" do
-    redirect"/login" if session[:user_id] == nil
+    redirect "/login" if session[:user_id].nil?
     @reservation_repo = ReservationRepository.new
     @space_repo = SpaceRepository.new
     @user_repo = UserRepository.new
@@ -97,31 +89,20 @@ class Application < Sinatra::Base
   end
 
   get "/newspace" do
-    redirect"/login" if session[:user_id] == nil
+    redirect "/login" if session[:user_id].nil?
     return erb(:new_space)
   end
 
   post "/newspace" do
-    redirect"/login" if session[:user_id] == nil
-    @error = nil
-    input_validation
-    if @error != nil
-      return erb(:new_space)
-    else
-      repo_spaces = SpaceRepository.new
-      new_space = Space.new
-      new_space.title = params[:title]
-      new_space.description = params[:description]
-      new_space.address = params[:address]
-      new_space.price_per_night = params[:price_per_night]
-      new_space.available_from = params[:available_from]
-      new_space.available_to = params[:available_to]
-      new_space.host_id = session[:user_id]
-      repo_spaces.create(new_space)
-      @space = SpaceRepository.new.find_by_host_id(session[:user_id])[-1]
-      @host = UserRepository.new.find_by_id(session[:user_id])
-      return erb(:new_space_success)
-    end 
+    redirect "/login" if session[:user_id].nil?
+    validate_input
+    return erb(:new_space) unless @error.nil?
+    repo_spaces = SpaceRepository.new
+    new_space = assign_params_space(params)
+    repo_spaces.create(new_space)
+    @space = SpaceRepository.new.find_by_host_id(session[:user_id])[-1]
+    @host = UserRepository.new.find_by_id(session[:user_id])
+    erb(:new_space_success)
   end
 
   get "/:space_id" do
@@ -132,7 +113,7 @@ class Application < Sinatra::Base
   end
   
   post "/requests/:reservation_id" do
-    redirect"/login" if session[:user_id] == nil
+    redirect "/login" if session[:user_id].nil?
     repo = ReservationRepository.new
     repo.confirm_reservation(params[:reservation_id])
     redirect "/requests"
@@ -140,7 +121,8 @@ class Application < Sinatra::Base
 
   private
 
-  def input_validation
+  def validate_input
+    @error = nil
     if (params[:title].length == 0 || params[:address].length == 0 || params[:price_per_night].length == 0 || params[:available_from].length == 0 || params[:available_to.length == 0])
       @error = "missing information error"
     elsif params[:price_per_night].match?(/[^\d.]/)
@@ -188,7 +170,7 @@ class Application < Sinatra::Base
     end
   end
 
-  def assign_values_to_reservation(params)
+  def assign_params_to_reservation(params)
     reservation = Reservation.new
     reservation.host_id = params[:host_id]
     reservation.guest_id = params[:guest_id]
@@ -198,5 +180,26 @@ class Application < Sinatra::Base
     reservation.number_night = (reservation.end_date - reservation.start_date).to_i
     reservation.confirmed = 'false'
     return reservation
+  end
+
+  def assign_params_user(params)
+    new_user = User.new
+    new_user.first_name = params[:first_name]
+    new_user.last_name = params[:last_name]
+    new_user.email = params[:email]
+    new_user.password = params[:password]
+    return new_user
+  end
+
+  def assign_params_space(params)
+    new_space = Space.new
+    new_space.title = params[:title]
+    new_space.description = params[:description]
+    new_space.address = params[:address]
+    new_space.price_per_night = params[:price_per_night]
+    new_space.available_from = params[:available_from]
+    new_space.available_to = params[:available_to]
+    new_space.host_id = session[:user_id]
+    return new_space
   end
 end
