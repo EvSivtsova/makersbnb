@@ -29,7 +29,7 @@ class Application < Sinatra::Base
   post "/signup" do
     signup_input_validation
     if @error != nil
-      erb(signup)
+      erb(:signup)
     end
     repo_users = UserRepository.new
     new_user = User.new
@@ -173,4 +173,36 @@ class Application < Sinatra::Base
     return @error
   end
   
+  def valid_availability?(start_date_string, end_date_string)
+    if start_date_string.empty? || end_date_string.empty?
+      return false
+    end
+    space_repo = SpaceRepository.new
+    space = space_repo.find_by_space_id(params[:space_id])
+    start_date = Date.parse(start_date_string)
+    end_date = Date.parse(end_date_string)
+    available_from = Date.parse(space.available_from)
+    available_to = Date.parse(space.available_to)
+    check_dates_within_availability_range?(start_date, end_date, available_from, available_to)
+  end
+
+  def check_dates_within_availability_range?(start_date, end_date, available_from, available_to)
+    if (start_date < end_date) && (start_date > available_from) && (end_date < available_to)
+      return true
+    else
+      return false
+    end
+  end
+
+  def assign_values_to_reservation(params)
+    reservation = Reservation.new
+    reservation.host_id = params[:host_id]
+    reservation.guest_id = params[:guest_id]
+    reservation.space_id = params[:space_id]
+    reservation.start_date = Date.parse(params[:available_from])
+    reservation.end_date = Date.parse(params[:available_to])
+    reservation.number_night = (reservation.end_date - reservation.start_date).to_i
+    reservation.confirmed = 'false'
+    return reservation
+  end
 end

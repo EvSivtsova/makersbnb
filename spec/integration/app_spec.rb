@@ -138,10 +138,10 @@ describe Application do
       expect(response.body).to include "<p>The host of this space is: Anna"
       expect(response.body).to include "<label>From:</label>"
       expect(response.body).to include 'input type="date"'
-      expect(response.body).to include 'name="available_from"/>'
+      expect(response.body).to include 'name="available_from"'
       expect(response.body).to include "<label>To:</label>"
       expect(response.body).to include 'input type="date"'
-      expect(response.body).to include 'name="available_to"/>'
+      expect(response.body).to include 'name="available_to"'
       expect(response.body).to include "<button>Request to Book!</button>"
     end
   end
@@ -157,30 +157,57 @@ describe Application do
     end
   end
 
-context "GET /request/?" do
-  context "request to book failed" do
-    it "shows a fail page" do
-      response = get("/request/fail")
-      expect(response.status).to eq 200
-      expect(response.body).to include("<p>Please go back and try again - make sure you have entered dates!</p>")
-      expect(response.body).to include("<html>")
-      expect(response.body).to include("<body>")
-      expect(response.body).to include("<h2>Request Failed</h2>")
-      expect(response.body).to include('<a href="/" class="home">Go to homepage</a>')
-      expect(response.body).to include('<a href="/requests">Go to your requests</a>')
+  context "POST /request/?" do
+    context 'property is available for rent' do
+      it "checks the dates and redirects to /request/success" do
+        user_repo = UserRepository.new
+        id = user_repo.all.first.user_id
+        session = {user_id: id}
+        space_repo = SpaceRepository.new
+        space = space_repo.all[1]
+        get("#{space.space_id}", {},  "rack.session" => session)
+        response = post('request/?', 
+          params = {
+            host_id: space.host_id,
+            guest_id: session[:user_id],
+            space_id: space.space_id,
+            available_from: "18/10/2022", 
+            available_to: "22/10/2022",
+            confirmed: "false"
+          },
+            "rack.session" => session
+        )
+        expect(response.status).to eq 302
+        expect(user_repo).to be_instance_of(UserRepository)
+        expect(space_repo).to be_instance_of(SpaceRepository)
+        expect(last_response).to be_redirect
+      end
     end
-  end
-  context "request to book successful" do
-    xit "shows a success page" do
-      response = get("/request/success")
-      expect(response.status).to eq 200
-      expect(response.body).to include("You have successfully sent a request to stay at")
-      expect(response.body).to include("<html>")
-      expect(response.body).to include("<body>")
-      expect(response.body).to include('<a href="/" class="home">Go to homepage</a>')
-      expect(response.body).to include('<a href="/requests/">Go to your requests</a>')
-     end 
-    end 
+    context 'property is not available for rent' do
+      it "checks the dates and redirects to /request/failure" do
+        user_repo = UserRepository.new
+        id = user_repo.all.first.user_id
+        session = {user_id: id}
+        space_repo = SpaceRepository.new
+        space = space_repo.all[1]
+        get("#{space.space_id}", {},  "rack.session" => session)
+        response = post('request/?', 
+          params = {
+            host_id: space.host_id,
+            guest_id: session[:user_id],
+            space_id: space.space_id,
+            available_from: "28/10/2024", 
+            available_to: "22/10/2024",
+            confirmed: "false"
+          },
+            "rack.session" => session
+        )
+        expect(space_repo).to be_instance_of(SpaceRepository)
+        expect(user_repo).to be_instance_of(UserRepository)
+        expect(response.status).to eq 200
+        expect(response.body).to include("Please try again - make sure you have entered dates!")   
+      end
+    end
   end
 
   context "GET /requests" do
