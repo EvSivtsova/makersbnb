@@ -36,16 +36,6 @@ describe "validate input methods" do
   end
 
   context "when validating signup form" do
-    xit "the error is nil if data is correct" do
-      params = {
-        "first_name" => "FirstName", 
-        "last_name"=>"LastName".to_s, 
-        "email"=>"name@yahoo.com".to_s, 
-        "password"=>"myPassword123$".to_s
-      }
-      expect(validate_signup_input(params)).to eq(nil)
-    end
-
     it "the error is input_missing if data is missing" do
       params = {
         "first_name"=>"", 
@@ -54,52 +44,6 @@ describe "validate input methods" do
         "password"=>"myPassword123$"
       }
       expect(validate_signup_input(params)).to eq("input_missing")
-    end
-
-    xit "the error is invalid_name if forbidden characters are used" do
-      params = {
-        "first_name"=>"FirstName", 
-        "last_name"=>"123LastName", 
-        "email"=>"name@yahoo.com", 
-        "password"=>"myPassword123$"
-      }
-      expect(validate_signup_input(params)).to eq("invalid_name")
-    end
-
-    xit "the error is existing_email if email exists in the database" do
-      params = {
-        "first_name"=>"FirstName", 
-        "last_name"=>"LastName", 
-        "email"=>"test2@example.com", 
-        "password"=>"myPassword123$"
-      }
-      expect(validate_signup_input(params)).to eq(nil)
-    end
-  end
-
-  context "when validating new space form" do
-    xit "the error is nil if data is correct" do
-      params = {
-        "title"=>"new title",
-        "description"=>"new description",
-        "address"=>"new address",
-        "price_per_night"=>"250.0",
-        "available_from"=>"2022-07-20",
-        "available_to"=>"2022-09-20"
-      }
-      expect(validate_signup_input(params)).to eq(nil)
-    end
-
-    it "the error is 'missing information error' if data is correct" do
-      params = {
-        "title"=>"",
-        "description"=>"new description",
-        "address"=>"new address",
-        "price_per_night"=>"250.0",
-        "available_from"=>"2022-07-20",
-        "available_to"=>"2022-09-20"
-      }
-      expect(validate_input_space(params)).to eq('missing information error')
     end
   end
 end
