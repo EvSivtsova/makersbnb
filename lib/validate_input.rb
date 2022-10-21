@@ -3,7 +3,6 @@ require_relative 'user_repository'
 def validate_input_space(params)
   regex_text = /[^\w\s?!.,']/i
   regex_address = /[^\w\s.,']/i
-  @error = nil
   if missing_data?(params)
     @error = "missing information error"
   elsif params[:price_per_night].match?(/[^\d.]/)
