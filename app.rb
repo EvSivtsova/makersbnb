@@ -28,7 +28,7 @@ class Application < Sinatra::Base
     signup_input_validation
     return erb(:signup) unless @error.nil?
     users_repo = UserRepository.new
-    new_user = assign_params_user(params)
+    new_user = assign_params_to_user(params)
     users_repo.create_user(new_user)
     @user = users_repo.find_user(params[:email])
     session[:user_id] = @user.user_id
@@ -98,7 +98,7 @@ class Application < Sinatra::Base
     validate_input
     return erb(:new_space) unless @error.nil?
     spaces_repo = SpaceRepository.new
-    new_space = assign_params_space(params)
+    new_space = assign_params_to_space(params)
     spaces_repo.create(new_space)
     @space = SpaceRepository.new.find_by_host_id(session[:user_id])[-1]
     @host = UserRepository.new.find_by_id(session[:user_id])
@@ -182,7 +182,7 @@ class Application < Sinatra::Base
     return reservation
   end
 
-  def assign_params_user(params)
+  def assign_params_to_user(params)
     new_user = User.new
     new_user.first_name = params[:first_name]
     new_user.last_name = params[:last_name]
@@ -191,7 +191,7 @@ class Application < Sinatra::Base
     return new_user
   end
 
-  def assign_params_space(params)
+  def assign_params_to_space(params)
     new_space = Space.new
     new_space.title = params[:title]
     new_space.description = params[:description]
