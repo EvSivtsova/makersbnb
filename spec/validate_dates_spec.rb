@@ -37,5 +37,14 @@ describe "check the dates are within the availability range" do
       result = check_dates_within_availability_range?(start_date, end_date, available_from, available_to)
       expect(result).to be(false)
     end
+
+    it "returns false when the start date comes after the end date" do
+      start_date = "2022/03/01"
+      available_from = "2022/01/01"
+      end_date = "2022/02/01"
+      available_to = "2022/04/01"
+      result = check_dates_within_availability_range?(start_date, end_date, available_from, available_to)
+      expect(result).to be(false)
+    end
   end
 end
