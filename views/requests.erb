@@ -9,10 +9,10 @@
       <a href='/logout'>Logout</a><br>
       <h2>Requests I've Received</h2>
       <div class="spaces_list">
-      <%@reservation_repo.find_by_host(@id).each do |reservation|%>
+      <%@reservations.find_by_host(@id).each do |reservation|%>
         <div id="requests_for_me" class="space_card" style="padding-bottom: 15px; margin-top: 10px;">
-          <a href='/<%=reservation.space_id%>'><%=@space_repo.find_by_space_id(reservation.space_id).title%></a><br>
-          Requested by: <%=@user_repo.find_by_id(reservation.guest_id).first_name%> <%=@user_repo.find_by_id(reservation.guest_id).last_name%><br>
+          <a href='/<%=reservation.space_id%>'><%=@spaces.find_by_space_id(reservation.space_id).title%></a><br>
+          Requested by: <%=@users.find_by_id(reservation.guest_id).first_name%> <%=@users.find_by_id(reservation.guest_id).last_name%><br>
           Requested Dates: <%=reservation.start_date%> to <%=reservation.end_date%><br>
           Number of Nights: <%=reservation.number_night%><br>
           Confirmed: <%=reservation.confirmed == "t" ? "TRUE": "FALSE"%>
@@ -25,10 +25,10 @@
       </div>
       <h2>Requests I've Made</h2>
       <div class="spaces_list">
-      <%@reservation_repo.find_by_guest(@id).each do |reservation|%>
+      <%@reservations.find_by_guest(@id).each do |reservation|%>
         <div id="requests_for_me" class="space_card" style="padding-bottom: 15px;  margin-top: 10px;">
-          <a href='/<%=reservation.space_id%>'><%=@space_repo.find_by_space_id(reservation.space_id).title%></a><br>
-          Host Name: <%=@user_repo.find_by_id(reservation.host_id).first_name%> <%=@user_repo.find_by_id(reservation.host_id).last_name%><br>
+          <a href='/<%=reservation.space_id%>'><%=@spaces.find_by_space_id(reservation.space_id).title%></a><br>
+          Host Name: <%=@users.find_by_id(reservation.host_id).first_name%> <%=@users.find_by_id(reservation.host_id).last_name%><br>
           Requested Dates: <%=reservation.start_date%> to <%=reservation.end_date%><br>
           Number of Nights: <%=reservation.number_night%><br>
           Confirmed: <%=reservation.confirmed == "t" ? "TRUE": "FALSE"%>

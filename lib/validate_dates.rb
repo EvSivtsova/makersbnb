@@ -7,7 +7,6 @@ def check_dates_within_availability_range?(start_date, end_date, available_from,
       (start_date_object > available_from_object) && 
       (end_date_object < available_to_object)
     return true
-  else
-    return false
   end
+  return false
 end

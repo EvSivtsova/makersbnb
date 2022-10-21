@@ -23,7 +23,7 @@ def validate_signup_input(params)
     @error = "input_missing"
   elsif (params[:first_name].match?(regex_name) || params[:last_name].match?(regex_name))
     @error = "invalid_name"
-  elsif email_unique?(params[:email]) == nil
+  elsif email_unique?(params[:email]).nil?
     @error = "existing_email"
   end
   return @error

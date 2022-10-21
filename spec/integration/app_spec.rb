@@ -1,7 +1,6 @@
 require "spec_helper"
 require "rack/test"
 require_relative "../../app"
-# require "test/unit"
 
 def reset_makers_bnb_table
   seed_sql = File.read("spec/seeds/makers_bnb_seed.sql")
@@ -113,7 +112,7 @@ describe Application do
         expect(response.body).to include '<div class="spaces_list">'
         expect(response.body).to include '<h2 class="home_header">Welcome John Parker!</h2>'
         expect(response.body).to include '<input type="submit" value="Log out"'
-        expect(response.body).to include '<form action="/newspace"'
+        expect(response.body).to include '<form action="/space/new"'
         expect(response.body).to include 'a modern house in the mountains'
         expect(response.body).not_to include 'a modern house on the beach`'
       end
@@ -249,12 +248,12 @@ describe Application do
     end
   end
       
-  context "GET /newspace" do
+  context "GET /space/new" do
     it "returns 200 OK and form for create a new space" do
       login = post('/login', params = { email: "test2@example.com", password: "password2" })
-      response = get("/newspace")
+      response = get("/space/new")
       expect(response.status).to eq 200
-      expect(response.body).to include('<form action="/newspace" method="POST">')
+      expect(response.body).to include('<form action="/space/new" method="POST">')
       expect(response.body).to include('<input type="text" name="title"/><br>')
       expect(response.body).to include('<input type="text" name="description"/><br>')
       expect(response.body).to include('<input type="text" name="address"/><br>')
@@ -265,16 +264,16 @@ describe Application do
     end
 
     it "redirects to /login page if user not logged in" do
-      response = get("/newspace")
+      response = get("/space/new")
       expect(response.status).to eq 302
       expect(response).to be_redirect  
     end
   end
 
-  context "POST /newspace" do
+  context "POST /space/new" do
     it "returns 200 OK and adds the new space to the database" do
       login = post('/login', params = { email: "test2@example.com", password: "password2" })
-      response = post('/newspace', params = { title: "new title", 
+      response = post('/space/new', params = { title: "new title", 
         description: "new description", 
         address: "new address", 
         price_per_night: 250.00,
@@ -298,7 +297,7 @@ describe Application do
       expect(response.body).to include('<p>Price per night: $250.00</p>')
       expect(response.body).to include('<p>Available from: 2022-07-20</p>')
       expect(response.body).to include('<p>Available to: 2022-09-20</p>')
-      expect(response.body).to include('<a href="/newspace" class="button">Create a new space</a><br>')
+      expect(response.body).to include('<a href="/space/new" class="button">Create a new space</a><br>')
     end
 
     it "returns fails to create a new space if information is missing" do

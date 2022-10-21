@@ -18,7 +18,7 @@
       <%elsif @error == "invalid address"%><br>
         <h2>Address must be 100 characters maximum and contain letters, numbers and standard punctuation only, please try again.</h2>
       <% end %>
-      <form action="/newspace" method="POST">
+      <form action="/space/new" method="POST">
         <label> Title: </label>
         <input type="text" name="title"/><br>
         <label> Short description: </label>
