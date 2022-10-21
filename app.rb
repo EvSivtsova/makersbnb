@@ -124,7 +124,7 @@ class Application < Sinatra::Base
 
   def validate_input
     @error = nil
-    if (params[:title].length == 0 || params[:address].length == 0 || params[:price_per_night].length == 0 || params[:available_from].length == 0 || params[:available_to.length == 0])
+    if missing_data?
       @error = "missing information error"
     elsif params[:price_per_night].match?(/[^\d.]/)
       @error = "price format error"
@@ -140,7 +140,7 @@ class Application < Sinatra::Base
 
   def signup_input_validation
     users_repo = UserRepository.new
-    if ((params[:first_name].length == 0) || (params[:last_name].length == 0) || (params[:email].length == 0) || (params[:password].length == 0))
+    if missing_data?
       @error = "input_missing"
     elsif (params[:first_name].match?(/[^a-z\s-]{2,30}/i)|| params[:last_name].match?(/[^a-z\s-]{2,30}/i))
       @error = "invalid_name"
@@ -148,6 +148,15 @@ class Application < Sinatra::Base
       @error = "existing_email"
     end
     return @error
+  end
+
+  def missing_data?
+    errors = []
+    params.each do |param|
+      return if param[0] == "description"
+      errors < param if param[1].empty?
+    end
+    return !errors.empty?
   end
   
   def valid_availability?(start_date_string, end_date_string)
