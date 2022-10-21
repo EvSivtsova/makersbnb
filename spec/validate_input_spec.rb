@@ -11,4 +11,15 @@ describe "validate input methods" do
       expect(missing_data?(params)).to be(false)
     end
   end
+
+  context "when testing for user email" do
+    it "returns nil if the email exists in the database" do
+      result = email_unique?("test2@example.com")
+      expect(result).to eq(nil)
+    end
+    it "returns true if the email does not exist in the database" do
+      result = email_unique?("test25@example.com")
+      expect(result).to eq(true)
+    end
+  end 
 end
