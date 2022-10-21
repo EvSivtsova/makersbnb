@@ -27,7 +27,7 @@ class Application < Sinatra::Base
   end
 
   post "/signup" do
-    signup_input_validation(params)
+    validate_signup_input(params)
     return erb(:signup) unless @error.nil?
     users_repo = UserRepository.new
     new_user = assign_params_to_user(params)
@@ -97,7 +97,7 @@ class Application < Sinatra::Base
 
   post "/newspace" do
     redirect "/login" if session[:user_id].nil?
-    validate_input(params)
+    validate_input_space(params)
     return erb(:new_space) unless @error.nil?
     spaces_repo = SpaceRepository.new
     new_space = assign_params_to_space(params)
@@ -124,12 +124,11 @@ class Application < Sinatra::Base
   private
   
   def valid_availability?(start_date_string, end_date_string)
-    if start_date_string.empty? || end_date_string.empty?
-      return false
-    end
+    return false if start_date_string.empty? || end_date_string.empty?
     space_repo = SpaceRepository.new
     space = space_repo.find_by_space_id(params[:space_id])
-    check_dates_within_availability_range?(start_date_string, end_date_string, space.available_from, space.available_to)
+    check_dates_within_availability_range?(start_date_string, end_date_string, 
+        space.available_from, space.available_to)
   end
 
   def assign_params_to_reservation(params)
