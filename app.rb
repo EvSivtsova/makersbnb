@@ -4,6 +4,7 @@ require_relative "lib/database_connection"
 require_relative "lib/user_repository"
 require_relative "lib/space_repository"
 require_relative "lib/reservation_repository"
+require_relative "./lib/validate_dates"
 
 DatabaseConnection.connect
 
@@ -155,19 +156,7 @@ class Application < Sinatra::Base
     end
     space_repo = SpaceRepository.new
     space = space_repo.find_by_space_id(params[:space_id])
-    start_date = Date.parse(start_date_string)
-    end_date = Date.parse(end_date_string)
-    available_from = Date.parse(space.available_from)
-    available_to = Date.parse(space.available_to)
-    check_dates_within_availability_range?(start_date, end_date, available_from, available_to)
-  end
-
-  def check_dates_within_availability_range?(start_date, end_date, available_from, available_to)
-    if (start_date < end_date) && (start_date > available_from) && (end_date < available_to)
-      return true
-    else
-      return false
-    end
+    check_dates_within_availability_range?(start_date_string, end_date_string, space.available_from, space.available_to)
   end
 
   def assign_params_to_reservation(params)
