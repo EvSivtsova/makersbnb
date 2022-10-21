@@ -25,10 +25,10 @@ describe Application do
       expect(response.body).to include("</form>")
       expect(response.body).to include("<html>")
       expect(response.body).to include("Create Account")
-      expect(response.body).to include('<input type="text" name="first_name"/><br>')
-      expect(response.body).to include('<input type="text" name="last_name"/><br>')
-      expect(response.body).to include('<input type="email" name="email"/><br>')
-      expect(response.body).to include('<input type="password" name="password"/><br>')
+      expect(response.body).to include('<input type="text" name="first_name"')
+      expect(response.body).to include('<input type="text" name="last_name"')
+      expect(response.body).to include('<input type="email" name="email"')
+      expect(response.body).to include('<input type="password" name="password"')
       expect(response.body).to include('<input type="submit" class="submit_button" value="Sign up"/>')
     end
   end

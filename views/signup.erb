@@ -16,13 +16,13 @@
       <br>
       <form action="/signup" method="POST" class="signup">
         <label> First Name: </label>
-        <input type="text" name="first_name"/><br>
+        <input type="text" name="first_name" placeholder="John" required="true"/><br>
         <label> Last Name: </label>
-        <input type="text" name="last_name"/><br>
+        <input type="text" name="last_name" placeholder="Smith" required="true"/><br>
         <label> Email: </label>
-        <input type="email" name="email"/><br>
+        <input type="email" name="email" placeholder="johnsmith@email.com" required="true"/><br>
         <label> Password: </label>
-        <input type="password" name="password"/><br>
+        <input type="password" name="password" placeholder="myPassword123$" required="true"/><br>
         <input type="submit" class="submit_button" value="Sign up"/>
       </form>
       <form action="/login" class="button">
