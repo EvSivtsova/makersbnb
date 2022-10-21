@@ -28,9 +28,8 @@ end
 
 def missing_data?(params)
   errors = []
-  params.each do |param|
-    return if param[0] == "description"
-    errors < param if param[1].empty?
+  params.each do |key, value|
+    errors << key if value.empty? && key != "description"
   end
   return !errors.empty?
 end
