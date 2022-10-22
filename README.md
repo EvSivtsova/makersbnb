@@ -93,6 +93,6 @@ createdb makers_bnb_test
 rspec
 rubocop
 ```
-<img src='https://github.com/EvSivtsova/makersbnb/blob/main/outputs/total_test_coverage.png'>
+<img src='https://github.com/EvSivtsova/makersbnb/blob/main/outputs/app_integration_test_coverage.png'>
 
 Please view screenshots of some of the test results [here](https://github.com/EvSivtsova/makersbnb/tree/main/outputs).
