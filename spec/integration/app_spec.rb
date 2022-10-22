@@ -56,6 +56,15 @@ describe Application do
       })
       expect(last_request.url).to include("signup")
     end
+    it "redirects to signup view if data is missing" do
+      response = post("/signup", params = { 
+        first_name: "FirstName", 
+        last_name: "LastName", 
+        email: "test2@example.com", 
+        password: "hash_password" 
+      })
+      expect(last_request.url).to include("signup")
+    end
   end
 
   context "GET /login" do
@@ -300,25 +309,89 @@ describe Application do
       expect(response.body).to include('<a href="/space/new" class="button">Create a new space</a><br>')
     end
 
-    it "returns fails to create a new space if information is missing" do
+    it "renders new_space page with error message if information is missing" do
       login = post('/login', params = { email: "test2@example.com", password: "password2" })
+      response = post('/space/new', params = { 
+        title: "", 
+        description: "test description", 
+        address: "new address", 
+        price_per_night: 250.00,
+        available_from: "2022-07-20",
+        available_to: "2022-09-20" }
+      )
       repo = SpaceRepository.new
-      new_space = double(:space, address: "address", description: "description", available_from: "2022/07/19", available_to: "2022/08/01", host_id: repo.all.first.host_id)
       expect { repo.create(new_space) }
+      expect(response.status).to eq 200
+      expect(response.body).to include('Some information is missing, please try again')
+      expect(response.body).to include('<form action="/space/new"')
     end
 
-    it "returns fails to create a new space if price per night is not digits and '.'" do
+    it "renders new_space page with error message if title contain symbols" do
       login = post('/login', params = { email: "test2@example.com", password: "password2" })
+      response = post('/space/new', params = { 
+        title: "net=w title &&", 
+        description: "test description", 
+        address: "new address", 
+        price_per_night: 250.00,
+        available_from: "2022-07-20",
+        available_to: "2022-09-20" }
+      )
       repo = SpaceRepository.new
-      new_space = double(:space, price_per_night: 'hello!', address: "address", description: "description", available_from: "2022/07/19", available_to: "2022/08/01", host_id: repo.all.first.host_id)
       expect { repo.create(new_space) }
+      expect(response.status).to eq 200
+      expect(response.body).to include('contain letters, numbers and standard punctuation only')
+      expect(response.body).to include('<form action="/space/new"')
     end
 
-    it "returns fails to create a new space if title, description or address contain not symbols" do
+    it "renders new_space page with error message if description contain symbols" do
       login = post('/login', params = { email: "test2@example.com", password: "password2" })
+      response = post('/space/new', params = { 
+        title: "newtitle", 
+        description: "test description £^5", 
+        address: "new address", 
+        price_per_night: 250.00,
+        available_from: "2022-07-20",
+        available_to: "2022-09-20" }
+      )
       repo = SpaceRepository.new
-      new_space = double(:space, price_per_night: '@$!$<>!', address: "address", description: "description", available_from: "2022/07/19", available_to: "2022/08/01", host_id: repo.all.first.host_id)
       expect { repo.create(new_space) }
+      expect(response.status).to eq 200
+      expect(response.body).to include('contain letters, numbers and standard punctuation only')
+      expect(response.body).to include('<form action="/space/new"')
+    end
+
+    it "renders new_space page with error message if description contain symbols" do
+      login = post('/login', params = { email: "test2@example.com", password: "password2" })
+      response = post('/space/new', params = { 
+        title: "newtitle", 
+        description: "test description", 
+        address: "new address<>", 
+        price_per_night: 250.00,
+        available_from: "2022-07-20",
+        available_to: "2022-09-20" }
+      )
+      repo = SpaceRepository.new
+      expect { repo.create(new_space) }
+      expect(response.status).to eq 200
+      expect(response.body).to include('contain letters, numbers and standard punctuation only')
+      expect(response.body).to include('<form action="/space/new"')
+    end
+
+    it "renders new_space page with error message if price per night is not digits" do
+      login = post('/login', params = { email: "test2@example.com", password: "password2" })
+      response = post('/space/new', params = { 
+        title: "test title", 
+        description: "test description", 
+        address: "new address", 
+        price_per_night: "OOO.00",
+        available_from: "2022-07-20",
+        available_to: "2022-09-20" }
+      )
+      repo = SpaceRepository.new
+      expect { repo.create(new_space) }
+      expect(response.status).to eq 200
+      expect(response.body).to include('Price per night must be numbers only')
+      expect(response.body).to include('<form action="/space/new"')
     end
   end
 

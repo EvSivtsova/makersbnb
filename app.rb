@@ -120,13 +120,6 @@ class Application < Sinatra::Base
   end
 
   private
-  
-  def valid_availability?(start_date_string, end_date_string)
-    return false if start_date_string.empty? || end_date_string.empty?
-    space = SpaceRepository.new.find_by_space_id(params[:space_id])
-    check_dates_within_availability_range?(start_date_string, end_date_string, 
-        space.available_from, space.available_to)
-  end
 
   def assign_session(email)
     @user = @users.find_user(email)
