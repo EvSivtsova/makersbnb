@@ -68,7 +68,7 @@ WITH john AS (
       '2022-07-19',
       '2022-08-31',
       43,
-      true,
+      false,
       host_id , guest_id, space_id FROM john, anna, jones_space;
  
 WITH anna AS (

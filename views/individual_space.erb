@@ -19,7 +19,7 @@
       <hr>
       <p class="user">The host of this space is: <%=@host_name%></p>
       <p class="description"><%=@space.description%></p>
-      <p class="price"><%=@space.price_per_night%></p>
+      <p class="price"><%=@space.price_per_night%> per night</p>
     </div>
     <br>
     <%if !session[:user_id].nil? && session[:user_id] != @space.host_id %>

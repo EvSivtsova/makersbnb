@@ -62,7 +62,7 @@ class Application < Sinatra::Base
   post "/request/?" do
     redirect "/login" if session[:user_id].nil?
     unless valid_availability?(params[:available_from], params[:available_to])
-      @error = "Please try again - make sure you have entered dates!"
+      @error = "Please try again - make sure you have entered correct dates!"
       space_id = params[:space_id]
       @space = SpaceRepository.new.find_by_space_id(space_id)
       @host_name = UserRepository.new.find_by_id(@space.host_id).first_name

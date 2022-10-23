@@ -224,7 +224,7 @@ describe Application do
         expect(space_repo).to be_instance_of(SpaceRepository)
         expect(user_repo).to be_instance_of(UserRepository)
         expect(response.status).to eq 200
-        expect(response.body).to include("Please try again - make sure you have entered dates!")   
+        expect(response.body).to include("Please try again - make sure you have entered correct dates!")   
       end
     end
     context 'when looking for property and being logged out' do

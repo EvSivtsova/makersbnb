@@ -99,7 +99,7 @@ RSpec.describe ReservationRepository do
       expect(reservations[0].start_date).to eq "2022-07-19"
       expect(reservations[0].end_date).to eq "2022-08-31"
       expect(reservations[0].number_night).to eq 43
-      expect(reservations[0].confirmed).to eq "t"
+      expect(reservations[0].confirmed).to eq "f"
     end
 
     it "returns nil if the guest doesn't exist" do
