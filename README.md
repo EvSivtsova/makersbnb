@@ -55,15 +55,15 @@ psql -h 127.0.0.1 makers_bnb < spec/seeds/makers_bnb_seed.sql
 rackup
 ```
 
-Go to `http://localhost:9292` to have a look at the list of properties you might be interested in renting. Please make sure that rackup keeps on running in a terminal.
+Go to `http://localhost:9292` to play with the app.
 
-To approve a reservation request, login as John Smith using the following email `test2@example.com` and password `password2`.
+To confirm a reservation request, login as John Smith using the following email `test2@example.com` and password `password2`.
 
 To run the tests:
 
 ```
 createdb makers_bnb_test
-psql -h 127.0.0.1 makers_bnb_test < spec/seeds/makers_bnb.sql  
+psql -h 127.0.0.1 makers_bnb_test < spec/seeds/makers_bnb.sql
 rspec
 rubocop
 ```
@@ -83,25 +83,25 @@ We had less than one week to deliver the project. We used that time in the follo
 * Friday pm (0.5 day)<br>
   Presentation and sprint retrospective
 
-Every day we had daily stand-ups and regular catch ups to discuss our experience and progress and ask for help as required.
+Every day we had daily stand-ups to discuss our progress and ask for help as required.
  
-The key challenges we faced were related to our decision to use universally unique identifiers. UUIDs are generated using random numbers every time we run tests, as such foreign keys are not known in advance and are regularly changing: 
-* how to design seeds for One-to_Many and Many-to-Many object relationships and
-* how to test for uuids under these constraints.
+The key challenges we faced were related to our decision to use universally unique identifiers. UUIDs are generated using random numbers every time we run tests, as such foreign keys are not known in advance and are regularly changing.
+* how to design seeds for One-to-Many and Many-to-Many object relationships?
+* how to test UUIDs?
 
 We also learned how to use sessions and test them using `rack.session`.
 
-Following the completion of the group project, I added and updated some tests to increase test coverage and test for more edge cases, and refactored some of the code. The original completed project can be found [here](https://github.com/ParisMonson/makersbnb).
+Following the completion of the group project, I refactored the code and added tests to increase test coverage. The original completed project can be found [here](https://github.com/ParisMonson/makersbnb).
 
 ## Code Design
 
 When working on this chalenge, we designed **three schemas** with PostgreSQL:
 1. Users schema (can be both renters and hosts).
-2. Spaces schema that can be rented. This schema references the users table to identify hosts. 
-3. Reservations schema that stores the details of the reservations:
-   * the space rented out (references the spaces schema(.
-   * the renter and host identities (references the users schema).
-   * the start and the end date of the booking.
+2. Spaces schema that stores information on listed spaces. This schema references the users table to identify hosts. 
+3. Reservations schema that stores reservations details:
+   * space rented out (references the spaces schema),
+   * renter and host identities (references the users schema),
+   * start and end date of the booking, number of nights and confirmation status.
    
 These schemas gave us enough flexibility to develop features in line with our user stories while minimizing the duplication of the data.
 
@@ -119,10 +119,11 @@ The result is a simple app that allows the users to:
 * create accounts 
 * list spaces
 * send reservation requests with the use of calendar
-* approve reservation requests for own properties
+* see the list of reservations we've made and received
+* approve reservation requests
 
 ## MiniBug :bug:
 
 CCS is not rendering on some pages. The affected views are: `individual_space` in case of an input error, `new_space_success`, `signup_success` and `request_success`. In a nutshell, no success with CSS on success pages.
 
-If you know why, I'd like to [find out](mailto:evcodes12@gmail.com). Thank you!! :sparkles:
+If you know why, [let me know](mailto:evcodes12@gmail.com). Thank you!! :sparkles:
