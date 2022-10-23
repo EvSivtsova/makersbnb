@@ -101,13 +101,13 @@ describe Application do
       it "shows a list of properties" do
         response = get("/")
         expect(response.status).to eq 200
-        expect(response.body).to include '<h3 class="home_header">To book a space just sign up or login!</h3>'
+        expect(response.body).to include '<h4>To book a space just sign up or login:</h4>'
         expect(response.body).to include "Sign up"
         expect(response.body).to include "Login"
         expect(response.body).to include '<div class="spaces_list">'
-        expect(response.body).to include '<h2 class="home_header">Welcome!</h2>'
-        expect(response.body).to include '<input type="submit" value="Login"'
-        expect(response.body).to include '<input type="submit" value="Sign up"'
+        expect(response.body).to include '<h2>Welcome!</h2>'
+        expect(response.body).to include '<a href="/signup"'
+        expect(response.body).to include '<a href="/login"'
       end
     end
     context "user logged in" do
@@ -115,13 +115,13 @@ describe Application do
         post("/login", params = { email: "test2@example.com", password: "password2" })
         response = get("/")
         expect(response.status).to eq 200
-        expect(response.body).to include '<h3 class="home_header">Book a space</h3>'
-        expect(response.body).to include '<form action="/logout"'
+        expect(response.body).to include '<h3>Book a space</h3>'
+        expect(response.body).to include '<a href="/logout"'
         expect(response.body).to include "Log out"
         expect(response.body).to include '<div class="spaces_list">'
-        expect(response.body).to include '<h2 class="home_header">Welcome John Parker!</h2>'
-        expect(response.body).to include '<input type="submit" value="Log out"'
-        expect(response.body).to include '<form action="/space/new"'
+        expect(response.body).to include '<h2>Welcome John Parker!</h2>'
+        expect(response.body).to include '<a href="/logout"'
+        expect(response.body).to include '<a href="/space/new"'
         expect(response.body).to include 'a modern house in the mountains'
         expect(response.body).not_to include 'a modern house on the beach`'
       end
@@ -134,8 +134,8 @@ describe Application do
       response = get space_id.to_s
       expect(response.status).to eq 200
       expect(response.body).to include "<h1>MakersBNB</h1>"
-      expect(response.body).to include '<a href="/" class="home">Go back to homepage</a>'
-      expect(response.body).to include "<p>The host of this space is: John"
+      expect(response.body).to include '<a href="/" class="index_button">Go back to homepage</a>'
+      expect(response.body).to include '<p class="user">The host of this space is: John'
     end
 
     it "shows the booking dates when user visit somebody else property" do
@@ -146,15 +146,15 @@ describe Application do
       expect(response.status).to eq 200
       expect(space_repo).to be_instance_of(SpaceRepository)
       expect(response.body).to include "<h1>MakersBNB</h1>"
-      expect(response.body).to include '<a href="/" class="home">Go back to homepage</a>'
-      expect(response.body).to include "<p>The host of this space is: Anna"
+      expect(response.body).to include '<a href="/"'
+      expect(response.body).to include '<p class="user">The host of this space is: Anna'
       expect(response.body).to include "<label>From:</label>"
       expect(response.body).to include 'input type="date"'
       expect(response.body).to include 'name="available_from"'
       expect(response.body).to include "<label>To:</label>"
       expect(response.body).to include 'input type="date"'
       expect(response.body).to include 'name="available_to"'
-      expect(response.body).to include "<button>Request to Book!</button>"
+      expect(response.body).to include 'input type="submit"'
     end
   end
 
@@ -262,7 +262,7 @@ describe Application do
       login = post('/login', params = { email: "test2@example.com", password: "password2" })
       response = get("/space/new")
       expect(response.status).to eq 200
-      expect(response.body).to include('<form action="/space/new" method="POST">')
+      expect(response.body).to include('<form action="/space/new" method="POST"')
       expect(response.body).to include('<input type="text" name="title"/><br>')
       expect(response.body).to include('<input type="text" name="description"/><br>')
       expect(response.body).to include('<input type="text" name="address"/><br>')
@@ -281,14 +281,20 @@ describe Application do
 
   context "POST /space/new" do
     it "returns 200 OK and adds the new space to the database" do
-      login = post('/login', params = { email: "test2@example.com", password: "password2" })
-      response = post('/space/new', params = { title: "new title", 
+      user_repo = UserRepository.new
+      id = user_repo.all.first.user_id
+      session = { user_id: id }
+      get('/space/new', {}, "rack.session" => session)
+      response = post('/space/new', params = { 
+        title: "new title", 
         description: "new description", 
         address: "new address", 
         price_per_night: 250.00,
         available_from: "2022-07-20",
-        available_to: "2022-09-20" }
-      )
+        available_to: "2022-09-20",
+        host_id: session[:user_id]
+      },
+        "rack.session" => session)
       space_repo = SpaceRepository.new.all
       expect(space_repo).to include(
         have_attributes(title: "new title", 
