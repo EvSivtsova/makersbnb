@@ -1,39 +1,59 @@
+<!DOCTYPE html>
+<head>
+  <title>MakersBNB new space</title>
+  <link rel="stylesheet" type="text/css" src="css/stylesheet.css"/>
+</head>
 <html>
-  <head>
-    <link rel="stylesheet" type="text/css" href="css/stylesheet.css"/>
-  </head>
-  <body>
-    <main>
+<body>
+  <main>
+    <% if session[:user_id] %> 
+      <div class="logout">
+        <a href="/logout" class="logout_button">Log out</a>
+      </div>
+    <%end%>
       <h1>MakersBNB</h1>
       <br>
       <h2>Create a new space:</h2>
       <%if @error == "missing information error"%><br>
-        <h2>Some information is missing, please try again.</h2>
+        <div class="alert">
+          <span>Some information is missing, please try again.</span>
+        </div>
       <%elsif @error == "price format error"%><br>
-        <h2>Price per night must be numbers only, please try again.</h2>
+        <div class="alert">
+          <span>Price per night must be numbers only, please try again.</span>
+        </div>
       <%elsif @error == "invalid title"%><br>
-        <h2>Title must be 50 characters maximum and contain letters, numbers and standard punctuation only, please try again.</h2>
+        <div class="alert">
+          <span>Title must be 50 characters maximum and contain letters, numbers and standard punctuation only, please try again.</span>
+        </div>
       <%elsif @error == "invalid description"%><br>
-        <h2>Description must be 500 characters maximum and contain letters, numbers and standard punctuation only, please try again.</h2>
+        <div class="alert">
+          <span>Description must be 500 characters maximum and contain letters, numbers and standard punctuation only, please try again.</span>
+        </div>
       <%elsif @error == "invalid address"%><br>
-        <h2>Address must be 100 characters maximum and contain letters, numbers and standard punctuation only, please try again.</h2>
+        <div class="alert">
+          <span>Address must be 100 characters maximum and contain letters, numbers and standard punctuation only, please try again.</span>
+        </div>
       <% end %>
-      <form action="/space/new" method="POST">
+      <form action="/space/new" method="POST" class="signup">
         <label> Title: </label>
-        <input type="text" name="title"/><br>
+          <input type="text" name="title"/><br>
         <label> Short description: </label>
-        <input type="text" name="description"/><br>
+          <input type="text" name="description"/><br>
         <label> Address: </label>
-        <input type="text" name="address"/><br>
+          <input type="text" name="address"/><br>
         <label> Price per night: </label>
-        <input type="int" name="price_per_night"/><br>
+          <input type="int" name="price_per_night"/><br>
         <label> Available form: </label>
-        <input type="date" name="available_from"/><br>
+          <input type="date" name="available_from"/><br>
         <label> Available to: </label>
-        <input type="date" name="available_to"/><br>
+          <input type="date" name="available_to"/><br>
+        <input type="hidden" name="host_id" value="<%=session[:user_id]%>"/>
         <input type="submit" class="submit_button" value="create space"/>
       </form>
-      <a href="/" class="home">Go back to homepage</a>
+      <div class="index">
+        <a href="/" class="index_button">Go back to homepage</a>
+      </div>
     </main>
   </body>
 </html>
