@@ -11,7 +11,7 @@ def assign_params_to_user(params)
   return new_user
 end
 
-def assign_params_to_space(params, host_id)
+def assign_params_to_space(params)
   new_space = Space.new
   new_space.title = params[:title]
   new_space.description = params[:description]
@@ -19,7 +19,7 @@ def assign_params_to_space(params, host_id)
   new_space.price_per_night = params[:price_per_night]
   new_space.available_from = params[:available_from]
   new_space.available_to = params[:available_to]
-  new_space.host_id = host_id
+  new_space.host_id = params[:host_id]
   return new_space
 end
 

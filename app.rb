@@ -98,7 +98,7 @@ class Application < Sinatra::Base
     validate_input_space(params)
     return erb(:new_space) unless @error.nil?
     spaces = SpaceRepository.new
-    new_space = assign_params_to_space(params, session[:user_id])
+    new_space = assign_params_to_space(params)
     spaces.create(new_space)
     @space = SpaceRepository.new.find_by_host_id(session[:user_id])[-1]
     @host = UserRepository.new.find_by_id(session[:user_id])

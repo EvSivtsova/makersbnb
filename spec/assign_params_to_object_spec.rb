@@ -26,9 +26,10 @@ describe "object creating methods" do
         address: "new address", 
         price_per_night: "250.00", 
         available_from: "2022-07-20", 
-        available_to: "2022-09-20"
+        available_to: "2022-09-20",
+        host_id: "aec3f85a-77a0-49d6-ad15-b5a82bd228cd"
       }
-      result = assign_params_to_space(params, "aec3f85a-77a0-49d6-ad15-b5a82bd228cd")
+      result = assign_params_to_space(params)
       expect(result.title).to eq "new title"
       expect(result.description).to eq "new description"
       expect(result.address).to eq "new address"
