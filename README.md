@@ -13,9 +13,7 @@ MakersBNB
   <img src="https://img.shields.io/badge/RSpec-blue?style=for-the-badge&logo=Rspec&logoColor=white" alt="Rspec"/>
 </div><br>
 
-This is a Makers' Academy challenge from week 5.
-
-We were asked to create a web app that connects property owners and potential renters, similar to AirBnb.
+This is a team challenge from the Makers Academy week 5. We were asked to create a web app that connects property owners and potential renters, similar to AirBnb.
 
 ## Meet the team
 
@@ -23,34 +21,6 @@ We were asked to create a web app that connects property owners and potential re
 * [Joe](https://github.com/Joseph-ER)<br>
 * [Karolina](https://github.com/karolina-codes)
 * [Paris](https://github.com/ParisMonson)<br>
-
-Following the completion of the group project, I added some additional tests to increase test coverage and add more edge cases, and refactored some of the code (wip). The original completed project can be found [here](https://github.com/ParisMonson/makersbnb).
-
-## Code Design
-
-We followed MVC model when working on this chalenge. We designed **three schemas** with PostgreSQL:
-1. Users schema (can be both renters and hosts).
-2. Spaces schema that can be rented. This schema references the users table to identify hosts. 
-3. Reservations schema that stores the details of the reservations:
-   * the space rented out (references the spaces schema(.
-   * the renter and host identities (references the users schema).
-   * the start and the end date of the booking.
-   
-These schemas gave us enough flexibility to develop features in line with our user stories while minimizing the duplication of the data.
-
-While creating the database and the seeds, we've test-driven models that are responsible for CRUD operations, which operate on their respective schemas:
-
-1. User and User Repository Classes
-2. Space and Space Repository Classes
-3. Reservation and Reservation Repository Classes
-
-Afterwards we've test-driven the Application class, which functions as a controller, and the views, thus connecting the frontend and the backend. 
-
-The result is a simple app that allows the users to:
-* create accounts 
-* list spaces
-* send reservation requests with the use of calendar
-* approve reservation requests for own properties
 
 ## TechBit
 
@@ -76,23 +46,83 @@ cd makersbnb
 bundle install
 ```
 
-To run the app in the browser:
+To run the app in the browser, create database and seed it:
 
 ```
-createdb makersbnb
-psql -h 127.0.0.1 makersbnb < spec/seeds/makers_bnb.sql
+createdb makers_bnb
+psql -h 127.0.0.1 makers_bnb < spec/seeds/makers_bnb.sql
+psql -h 127.0.0.1 makers_bnb < spec/seeds/makers_bnb_seed.sql
 rackup
 ```
 
-Go to `http://localhost:9292` to play with the app.
+Go to `http://localhost:9292` to have a look at the list of properties you might be interested in renting. Please make sure that rackup keeps on running in a terminal.
+
+To approve a reservation request, login as John Smith using the following email `test2@example.com` and password `password2`.
 
 To run the tests:
 
 ```
 createdb makers_bnb_test
+psql -h 127.0.0.1 makers_bnb_test < spec/seeds/makers_bnb.sql  
 rspec
 rubocop
 ```
-<img src='https://github.com/EvSivtsova/makersbnb/blob/main/outputs/app_integration_test_coverage.png'>
+<img src='https://github.com/EvSivtsova/makersbnb/blob/main/outputs/app_integration_test_coverage.png' width=400px>
 
-Please view screenshots of some of the test results [here](https://github.com/EvSivtsova/makersbnb/tree/main/outputs).
+## Planning and execution
+
+We had less than one week to deliver the project. We used that time in the following way:
+* Monday pm (0.7 day)<br>
+  Sprint planning: developing user stories and designing wireframes, identifying MVP and additional features, ticket writing
+* Tuesday and Wednesday am (1.5 day)<br>
+  Programming to deliver MVP
+* Wednesday pm and Thursday (1.5 day)<br>
+  Sprint review and adding additional features
+* Friday am (0.5 day)<br>
+  Clean up, CSS and planning presentation
+* Friday pm (0.5 day)<br>
+  Presentation and sprint retrospective
+
+Every day we had daily stand-ups and regular catch ups to discuss our experience and progress and ask for help as required.
+ 
+The key challenges we faced were related to our decision to use universally unique identifiers. UUIDs are generated using random numbers every time we run tests, as such foreign keys are not known in advance and are regularly changing: 
+* how to design seeds for One-to_Many and Many-to-Many object relationships and
+* how to test for uuids under these constraints.
+
+We also learned how to use sessions and test them using `rack.session`.
+
+Following the completion of the group project, I added and updated some tests to increase test coverage and test for more edge cases, and refactored some of the code. The original completed project can be found [here](https://github.com/ParisMonson/makersbnb).
+
+## Code Design
+
+When working on this chalenge, we designed **three schemas** with PostgreSQL:
+1. Users schema (can be both renters and hosts).
+2. Spaces schema that can be rented. This schema references the users table to identify hosts. 
+3. Reservations schema that stores the details of the reservations:
+   * the space rented out (references the spaces schema(.
+   * the renter and host identities (references the users schema).
+   * the start and the end date of the booking.
+   
+These schemas gave us enough flexibility to develop features in line with our user stories while minimizing the duplication of the data.
+
+It's important to highlight that we used uuids in all three schemas and encrypted and salted users' passwords at the database level.
+
+While creating the database and the seeds, we've test-driven models that are responsible for CRUD operations, which operate on their respective schemas:
+
+1. User and User Repository Classes
+2. Space and Space Repository Classes
+3. Reservation and Reservation Repository Classes
+
+Afterwards we've test-driven the Application class, which functions as a controller, and the views, thus connecting the frontend and the backend. 
+
+The result is a simple app that allows the users to:
+* create accounts 
+* list spaces
+* send reservation requests with the use of calendar
+* approve reservation requests for own properties
+
+## MiniBug :bug:
+
+CCS is not rendering on some pages. The affected views are: `individual_space` in case of an input error, `new_space_success`, `signup_success` and `request_success`. In a nutshell, no success with CSS on success pages.
+
+If you know why, I'd like to [find out](mailto:evcodes12@gmail.com). Thank you!! :sparkles:
