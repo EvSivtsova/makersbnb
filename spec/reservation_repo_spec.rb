@@ -30,7 +30,7 @@ RSpec.describe ReservationRepository do
 
     host = user_repo.find_user("ajones@example.com")
     guest = user_repo.find_user("test2@example.com")
-    space = space_repo.find_by_title("review view")
+    space = space_repo.find_by_title("river view")
 
     host_id = host.user_id
     guest_id = guest.user_id

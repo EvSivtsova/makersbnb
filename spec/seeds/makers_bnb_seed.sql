@@ -26,7 +26,7 @@ WITH anna AS (
   SELECT user_id FROM users WHERE first_name = 'Anna')
  
   INSERT INTO spaces (title, description, address, price_per_night, available_from, available_to, host_id)
-    SELECT 'review view', 'a house in the banks of the Rhodes', 'Crillon 12345', 80,'2022/03/19', '2023/09/19', user_id
+    SELECT 'river view', 'a house in the banks of the Rhodes', 'Crillon 12345', 80,'2022/03/19', '2023/09/19', user_id
     FROM anna; 
  
 WITH michael AS (
