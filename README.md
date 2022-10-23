@@ -22,6 +22,8 @@ This is a team challenge from the Makers Academy week 5. We were asked to create
 * [Karolina](https://github.com/karolina-codes)
 * [Paris](https://github.com/ParisMonson)<br>
 
+Following the completion of the group project, I refactored the code and added tests to increase test coverage. The original completed project can be found [here](https://github.com/ParisMonson/makersbnb).
+
 ## TechBit
 
 Technologies used:
@@ -90,8 +92,6 @@ The key challenges we faced were related to our decision to use universally uniq
 * how to test UUIDs?
 
 We also learned how to use sessions and test them using `rack.session`.
-
-Following the completion of the group project, I refactored the code and added tests to increase test coverage. The original completed project can be found [here](https://github.com/ParisMonson/makersbnb).
 
 ## Code Design
 
