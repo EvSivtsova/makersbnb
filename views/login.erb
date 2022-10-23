@@ -1,25 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>MakersBNB login</title>
+  <link rel="stylesheet" type="text/css" href="css/stylesheet.css"/>
+</head>
 <html>
-  <head>
-    <link rel="stylesheet" type="text/css" href="css/stylesheet.css"/>
-  </head>
-  <body>
-    <main>
-      <h1>MakersBNB</h1>
-      <h2>Login</h2>
+<body>
+  <main>
+    <h1>MakersBNB</h1>
+    <h2>Login</h2>
     <%if @error == true%>
-      <p>The password or email you entered is incorrect!</p>
+      <div class="alert">
+        <span>The password or email you entered is incorrect!</span>
+      </div>
     <%end%>
     <form action="/login" method="POST">
       <label>Email:</label>
-      <input type="email" name="email"/><br>
+        <input type="email" name="email"/><br>
       <label>Password:</label>
-      <input type="password" name="password"/><br>
+        <input type="password" name="password"/><br>
       <input type="submit" class="submit_button" value="Login"/>
     </form>
     <form action="/signup" class="button">
       <input type="submit" class="button_input" value="Sign Up"/>
-      </form>
-      <a href="/" class="home">Go back to homepage</a>
-    </main>
-  </body>
+    </form>
+    <div class="index">
+      <a href="/" class="index_button">Go back to homepage</a>
+    </div>
+  </main>
+</body>
 </html>
