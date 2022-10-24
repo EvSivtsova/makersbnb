@@ -15,6 +15,8 @@ MakersBNB
 
 This is a team challenge from the Makers Academy week 5. We were asked to create a web app that connects property owners and potential renters, similar to AirBnb.
 
+https://user-images.githubusercontent.com/105357551/197536980-aee98dba-c889-4d2d-8b09-c5fcff08c3d6.mp4
+
 ## Meet the team
 
 * [Ev](https://github.com/EvSivtsova)<br>
